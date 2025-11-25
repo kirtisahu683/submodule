@@ -1,5 +1,9 @@
-const fs = require("fs");
-const path = require("path");
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const dbPath = path.join(__dirname, "database.json");
 
@@ -11,21 +15,20 @@ function saveDB(data) {
   fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 }
 
-module.exports = {
-  createUser(user) {
+export function createUser(user) {
     const db = loadDB();
     user.id = Date.now();
     db.users.push(user);
     saveDB(db);
     return user;
-  },
+  }
 
-  getUsers() {
+  export function getUsers() {
     const db = loadDB();
     return db.users;
-  },
+  }
 
-  updateUser(id, update) {
+ export  function updateUser(id, update) {
     const db = loadDB();
     const user = db.users.find((u) => u.id == id);
     if (!user) return null;
@@ -33,13 +36,11 @@ module.exports = {
     Object.assign(user, update);
     saveDB(db);
     return user;
-  },
+  }
 
-  deleteUser(id) {
+ export function deleteUser(id) {
     const db = loadDB();
     db.users = db.users.filter((u) => u.id != id);
     saveDB(db);
     return true;
   }
-
-};
